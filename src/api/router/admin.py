@@ -4,18 +4,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.models import User, UserRoleEnum
 from src.api.manager import fastapi_users
+from src.api.utils import get_user_id
 from src.db.base import get_async_session
 
-crud = APIRouter(
-    prefix="/crud",
-    tags=["crud"],
+admin = APIRouter(
+    prefix="/admin",
+    tags=["admin"]
 )
 
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 
-@crud.get("/users/protected/staff")
-async def protected_route(
+@admin.get("/staff")
+async def get_staff(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)):
     query = select(User).where(User.role != "USER")
@@ -23,30 +24,49 @@ async def protected_route(
     return result.scalars().all()
 
 
-@crud.get("/users/staff")
-async def get_staff(session: AsyncSession = Depends(get_async_session)):
-    query = select(User.name).where(User.role != "USER")
-    result = await session.execute(query)
-    return result.scalars().all()
-
-
-@crud.put("/users/role")
-async def update_user_role(
+@admin.put("/role")
+async def update_role(
         user_id: int,
         new_role: UserRoleEnum,
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)
 ):
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=403, detail="You do not have permission to perform this action")
 
-    result = await session.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await get_user_id(user_id, session)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
     user.role = new_role
+    user.is_verified = True
+
+    if user.role == UserRoleEnum.USER:
+        user.salary = 0
+        user.is_verified = False
+
+    await session.commit()
+
+    return user
+
+
+@admin.put("/salary")
+async def update_staff_salary(
+        user_id: int,
+        new_salary: int,
+        session: AsyncSession = Depends(get_async_session),
+        current_user: User = Depends(current_superuser)
+):
+
+    user = await get_user_id(user_id, session)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.role == UserRoleEnum.USER:
+        raise HTTPException(status_code=409, detail="User is not staff")
+
+    user.salary = new_salary
+
     await session.commit()
 
     return user

@@ -1,17 +1,12 @@
-from fastapi import FastAPI, Depends, APIRouter
-from fastapi_users import FastAPIUsers
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import undefer, selectinload, defer
+from fastapi import FastAPI
 
-from src.api.manager import get_user_manager
-from src.api.models import User
 from src.api.schemas import UserRead, UserCreate
 from src.api.manager import fastapi_users
-from src.db.base import get_async_session
 from src.db.config import auth_backend
 
-from src.api.crud import crud
+from src.api.router.admin import admin
+from src.api.router.staff import staff
+from src.api.router.user import user
 
 app = FastAPI()
 
@@ -24,9 +19,12 @@ app.include_router(
 
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/register",
+    prefix="/auth/jwt",
     tags=["register"],
 )
 
-app.include_router(crud)
+app.include_router(admin)
+app.include_router(staff)
+app.include_router(user)
+
 
