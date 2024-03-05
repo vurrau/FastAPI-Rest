@@ -15,7 +15,7 @@ current_verified = fastapi_users.current_user(active=True, verified=True)
 
 
 @staff.get("/")
-async def get_staff(
+async def get_staff_info(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_verified)):
     query = select(User.email, User.name, User.salary).where(User.role != "USER")
@@ -24,10 +24,10 @@ async def get_staff(
 
 
 @staff.get("/user")
-async def get_user(
+async def get_user_name(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_verified)):
-    query = select(User).where(User.role == "USER")
+    query = select(User.name).where(User.role == "USER")
     result = await session.execute(query)
     return result.scalars().all()
 

@@ -12,7 +12,7 @@ user = APIRouter(
 
 
 @user.get("/staff")
-async def get_staff(session: AsyncSession = Depends(get_async_session)):
+async def get_staff_name(session: AsyncSession = Depends(get_async_session)):
     query = select(User.name, User.role).where(User.role != "USER")
     result = await session.execute(query)
     return result.mappings().all()

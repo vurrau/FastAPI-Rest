@@ -16,7 +16,7 @@ current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 
 @admin.get("/staff")
-async def get_staff(
+async def get_staff_full_info(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)):
     query = select(User).where(User.role != "USER")
