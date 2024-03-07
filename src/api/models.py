@@ -18,13 +18,14 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(length=30), nullable=False)
     email: Mapped[str] = mapped_column(String(length=320), unique=True, index=True, nullable=False)
+    role: Mapped[str] = mapped_column(
+        Pg_Enum(UserRoleEnum, name='role_ENUM'), nullable=False, default=UserRoleEnum.USER)
     salary: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(length=1024), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    role: Mapped[str] = mapped_column(
-        Pg_Enum(UserRoleEnum, name='user_role_enum', create_type=False), nullable=False, default=UserRoleEnum.USER)
+
 
 
 
