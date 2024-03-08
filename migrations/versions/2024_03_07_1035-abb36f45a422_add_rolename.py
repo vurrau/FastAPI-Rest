@@ -26,7 +26,7 @@ def upgrade() -> None:
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('name', sa.String(length=30), nullable=False),
                     sa.Column('email', sa.String(length=320), nullable=False),
-                    sa.Column('role', postgresql.ENUM('USER', 'STAFF', 'ADMIN', name='role_ENUM',
+                    sa.Column('role', postgresql.ENUM('USER', 'STAFF', 'ADMIN', name='role_enum',
                                                       create_type=False), nullable=False),
                     sa.Column('salary', sa.Integer(), nullable=True),
                     sa.Column('hashed_password', sa.String(length=1024), nullable=False),
