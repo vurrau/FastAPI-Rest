@@ -18,7 +18,7 @@ current_verified = fastapi_users.current_user(active=True, verified=True)
 async def get_staff_info(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_verified)):
-    query = select(User.email, User.name, User.salary).where(User.role != "USER")
+    query = select(User.email, User.name).where(User.role != "USER")
     result = await session.execute(query)
     return result.mappings().all()
 

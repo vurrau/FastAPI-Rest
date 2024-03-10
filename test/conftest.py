@@ -4,11 +4,12 @@ from typing import AsyncGenerator
 import pytest
 
 from httpx import AsyncClient, ASGITransport
+from sqlalchemy import select, delete
 from sqlalchemy.pool import NullPool
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from src.api.models import User
+from src.api.models import UserRoleEnum, User
 from src.main import app
 from src.db.base import get_async_session, Base
 
@@ -51,24 +52,105 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
-async def create_admin(session):
-    admin_data = {
-        "name": "Pavel",
-        "email": "pavel@gmail.com",
-        "role": "ADMIN",
-        "hashed_password": "12345",
-        "is_superuser": True
-    }
-    admin = User(**admin_data)
-    session.add(admin)
-    await session.commit()
-    return admin
-
-
-@pytest.fixture
 async def session():
     session = async_session_maker()
     try:
         yield session
     finally:
         await session.close()
+
+
+@pytest.fixture(autouse=True)
+async def cleanup_all_data(session):
+    yield
+    async with session.begin():
+        await session.execute(delete(User))
+
+
+@pytest.fixture
+async def create_admin(ac: AsyncClient, session):
+    response = await ac.post("/auth/register", json={
+        "email": "pavel@gmail.com",
+        "password": "12345",
+        "name": "Pavel"
+    })
+    assert response.status_code == 201
+
+    async with session as async_session:
+        result = await async_session.execute(select(User).where(User.email == "pavel@gmail.com"))
+        user = result.scalars().first()
+
+        assert user is not None
+
+        user.role = UserRoleEnum.ADMIN
+        user.is_verified = True
+        user.is_superuser = True
+
+        await async_session.commit()
+
+    return user
+
+
+@pytest.fixture
+async def create_staff(ac: AsyncClient, session):
+    response = await ac.post("/auth/register", json={
+        "email": "serg@gmail.com",
+        "password": "12345",
+        "name": "Serg"
+    })
+    assert response.status_code == 201
+
+    async with session as async_session:
+        result = await async_session.execute(select(User).where(User.email == "serg@gmail.com"))
+        user = result.scalars().first()
+
+        assert user is not None
+
+        user.salary = 2500
+        user.role = UserRoleEnum.STAFF
+        user.is_verified = True
+
+        await async_session.commit()
+
+    return user
+
+
+@pytest.fixture
+async def create_user(ac: AsyncClient, session):
+    response = await ac.post("/auth/register", json={
+        "email": "ivan@gmail.com",
+        "password": "12345",
+        "name": "Ivan"
+    })
+    assert response.status_code == 201
+
+    return response
+
+
+@pytest.fixture
+async def auth_token_staff(ac: AsyncClient, create_staff):
+    response = await ac.post("/auth/login", data={"username": "serg@gmail.com", "password": "12345"})
+    assert response.status_code == 204
+
+    token_cookie = response.cookies.get("fastapiusersauth")
+    assert token_cookie is not None
+
+    token = token_cookie
+    headers = {"Cookie": f"fastapiusersauth={token}"}
+    return headers
+
+
+@pytest.fixture
+async def auth_token_admin(ac: AsyncClient, create_admin):
+    response = await ac.post("/auth/login", data={"username": "pavel@gmail.com", "password": "12345"})
+    assert response.status_code == 204
+
+    token_cookie = response.cookies.get("fastapiusersauth")
+    assert token_cookie is not None
+
+    token = token_cookie
+    headers = {"Cookie": f"fastapiusersauth={token}"}
+    return headers
+
+
+

@@ -15,3 +15,8 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 async def get_user_id(user_id: int, session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(User).where(User.id == user_id))
     return result.scalar_one_or_none()
+
+
+async def get_user_email(email: str, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(User).where(User.email == email))
+    return result.scalar_one_or_none()

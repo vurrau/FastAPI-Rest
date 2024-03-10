@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.models import User, UserRoleEnum
 from src.api.manager import fastapi_users
-from src.api.utils import get_user_id
+from src.api.utils import get_user_id, get_user_email
 from src.db.base import get_async_session
 
 admin = APIRouter(
@@ -19,9 +19,9 @@ current_superuser = fastapi_users.current_user(active=True, superuser=True)
 async def get_staff_full_info(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)):
-    query = select(User).where(User.role != "USER")
+    query = select(User.email, User.name, User.salary, User.id, User.role).where(User.role != "USER")
     result = await session.execute(query)
-    return result.scalars().all()
+    return result.mappings().all()
 
 
 @admin.put("/role")
@@ -51,13 +51,13 @@ async def update_role(
 
 @admin.put("/salary")
 async def update_staff_salary(
-        user_id: int,
+        email: str,
         new_salary: int,
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)
 ):
 
-    user = await get_user_id(user_id, session)
+    user = await get_user_email(email, session)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
