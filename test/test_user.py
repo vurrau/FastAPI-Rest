@@ -10,13 +10,8 @@ async def test_get_staff_user(ac: AsyncClient, create_admin):
 
     assert len(staff_members) > 0
 
-    for member in staff_members:
-
-        assert "name" in member
-        assert "role" in member
-
     expected_data = {
-        "name": "Pavel",
+        "name": create_admin.name,
         "role": "ADMIN",
     }
     assert expected_data in staff_members

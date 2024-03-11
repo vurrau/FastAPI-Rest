@@ -27,7 +27,7 @@ async def get_staff_info(
 async def get_user_name(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_verified)):
-    query = select(User.name).where(User.role == "USER")
+    query = select(User.id, User.name).where(User.role == "USER")
     result = await session.execute(query)
-    return result.scalars().all()
+    return result.mappings().all()
 

@@ -44,20 +44,23 @@ async def update_role(
         user.salary = 0
         user.is_verified = False
 
+    query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.id == user_id)
+    result = await session.execute(query)
+
     await session.commit()
 
-    return user
+    return result.mappings().all()
 
 
 @admin.put("/salary")
 async def update_staff_salary(
-        email: str,
+        user_id: int,
         new_salary: int,
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)
 ):
 
-    user = await get_user_email(email, session)
+    user = await get_user_id(user_id, session)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -67,6 +70,9 @@ async def update_staff_salary(
 
     user.salary = new_salary
 
+    query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.id == user_id)
+    result = await session.execute(query)
+
     await session.commit()
 
-    return user
+    return result.mappings().all()

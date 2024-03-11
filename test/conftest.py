@@ -123,8 +123,15 @@ async def create_user(ac: AsyncClient, session):
         "name": "Ivan"
     })
     assert response.status_code == 201
+    async with session as async_session:
+        result = await async_session.execute(select(User).where(User.email == "ivan@gmail.com"))
+        user = result.scalars().first()
 
-    return response
+        assert user is not None
+
+        await async_session.commit()
+
+    return user
 
 
 @pytest.fixture

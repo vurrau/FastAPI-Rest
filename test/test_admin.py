@@ -1,5 +1,7 @@
 from httpx import AsyncClient
 
+from src.api.models import UserRoleEnum
+
 
 async def test_get_staff_admin(ac: AsyncClient, auth_token_admin, create_staff):
     response = await ac.get("/admin/staff", headers=auth_token_admin)
@@ -11,18 +13,59 @@ async def test_get_staff_admin(ac: AsyncClient, auth_token_admin, create_staff):
 
     assert len(staff_members) > 0
 
-    for member in staff_members:
-        assert "email" in member
-        assert "salary" in member
-        assert "name" in member
-        assert "id" in member
-        assert "role" in member
+    expected_data = {
+        "email": create_staff.email,
+        "id": create_staff.id,
+        "name": create_staff.name,
+        "role": "STAFF",
+        "salary": create_staff.salary,
+    }
+    assert expected_data in staff_members
+
+
+async def test_update_role(ac: AsyncClient, auth_token_admin, create_user):
+    response = await ac.put("/admin/role",
+                            headers=auth_token_admin,
+                            params={"user_id": create_user.id, "new_role": "STAFF"}
+                            )
+
+    assert response.status_code == 200
+    assert "application/json" in response.headers["content-type"]
+
+    staff_members = response.json()
+
+    assert len(staff_members) > 0
 
     expected_data = {
-        "email": "serg@gmail.com",
-        "salary": 2500,
-        "name": "Serg",
-        "id": 2,
+        "id": create_user.id,
+        "email": create_user.email,
+        "name": create_user.name,
         "role": "STAFF",
+        "salary": create_user.salary,
+
+    }
+    assert expected_data in staff_members
+
+
+async def test_update_staff_salary(ac: AsyncClient, auth_token_admin, create_staff):
+    response = await ac.put("/admin/salary",
+                            headers=auth_token_admin,
+                            params={"user_id": create_staff.id, "new_salary": 2222}
+                            )
+
+    assert response.status_code == 200
+    assert "application/json" in response.headers["content-type"]
+
+    staff_members = response.json()
+
+    assert len(staff_members) > 0
+
+    expected_data = {
+        "id": create_staff.id,
+        "email": create_staff.email,
+        "name": create_staff.name,
+        "role": "STAFF",
+        "salary": 2222,
+
     }
     assert expected_data in staff_members
