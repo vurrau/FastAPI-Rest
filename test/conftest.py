@@ -9,11 +9,11 @@ from sqlalchemy.pool import NullPool
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from src.api.models import UserRoleEnum, User
+from src.models.models import UserRoleEnum, User
 from src.main import app
-from src.db.base import get_async_session, Base
+from src.core.db.base import get_async_session, Base
 
-from src.config import DB_USER_TEST, DB_HOST_TEST, DB_PASS_TEST, DB_PORT_TEST, DB_NAME_TEST
+from src.core.config import DB_USER_TEST, DB_HOST_TEST, DB_PASS_TEST, DB_PORT_TEST, DB_NAME_TEST
 
 DATABASE_URL_TEST = f"postgresql+asyncpg://{DB_USER_TEST}:{DB_PASS_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/{DB_NAME_TEST}"
 

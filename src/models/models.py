@@ -1,8 +1,8 @@
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, func, JSON, Null
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import Boolean, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
-from src.db.base import Base
+from src.core.db.base import Base
 
 from enum import Enum
 from sqlalchemy.dialects.postgresql import ENUM as Pg_Enum

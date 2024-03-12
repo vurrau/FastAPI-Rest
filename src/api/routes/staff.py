@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.manager import fastapi_users
-from src.api.models import User
-from src.db.base import get_async_session
+from src.services.manager import fastapi_users
+from src.models.models import User
+from src.core.db.base import get_async_session
 
 staff = APIRouter(
     prefix="/staff",

@@ -1,7 +1,5 @@
 from httpx import AsyncClient
 
-from src.api.models import UserRoleEnum
-
 
 async def test_get_staff_admin(ac: AsyncClient, auth_token_admin, create_staff):
     response = await ac.get("/admin/staff", headers=auth_token_admin)
@@ -32,19 +30,14 @@ async def test_update_role(ac: AsyncClient, auth_token_admin, create_user):
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
 
-    staff_members = response.json()
+    user = create_user
 
-    assert len(staff_members) > 0
+    user_data = response.json()
 
-    expected_data = {
-        "id": create_user.id,
-        "email": create_user.email,
-        "name": create_user.name,
-        "role": "STAFF",
-        "salary": create_user.salary,
-
-    }
-    assert expected_data in staff_members
+    assert user_data["id"] == user.id
+    assert user_data["email"] == user.email
+    assert user_data["name"] == user.name
+    assert user_data["role"] == "STAFF"
 
 
 async def test_update_staff_salary(ac: AsyncClient, auth_token_admin, create_staff):

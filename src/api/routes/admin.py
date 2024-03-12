@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.models import User, UserRoleEnum
-from src.api.manager import fastapi_users
-from src.api.utils import get_user_id, get_user_email
-from src.db.base import get_async_session
+from src.models.models import User, UserRoleEnum
+from src.services.manager import fastapi_users
+from src.services.utils import get_user_id
+from src.core.db.base import get_async_session
 
 admin = APIRouter(
     prefix="/admin",
@@ -49,7 +49,7 @@ async def update_role(
 
     await session.commit()
 
-    return result.mappings().all()
+    return result.mappings().first()
 
 
 @admin.put("/salary")
