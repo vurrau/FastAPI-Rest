@@ -8,7 +8,9 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.core.config import DB_NAME, DB_PORT, DB_HOST, DB_PASS, DB_USER
-from src.models.models import *
+from src.api.user.model import *
+from src.api.solution.model import *
+from src.api.request.model import *
 
 
 sys.path.append(os.path.join(sys.path[0], 'src'))

@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, schemas, models, exceptions, FastAPIUsers
 
-from src.models.models import User
+from src.api.user.model import User
 from src.services.utils import get_user_db
 
 from src.core.config import SECRET_MANAGER

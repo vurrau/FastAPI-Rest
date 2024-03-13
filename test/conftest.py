@@ -9,7 +9,7 @@ from sqlalchemy.pool import NullPool
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from src.models.models import UserRoleEnum, User
+from src.api.user.model import UserRoleEnum, User
 from src.main import app
 from src.core.db.base import get_async_session, Base
 

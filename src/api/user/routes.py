@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models.models import User
+from src.api.user.model import User
 from src.core.db.base import get_async_session
 
 user = APIRouter(
