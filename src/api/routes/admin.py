@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.model import User, UserRoleEnum
 from src.services.manager import fastapi_users
-from src.api.user.logic import get_user_id, update_user_salary, update_user_role
+from src.api.user.logic import get_user_id, update_user_salary, update_user_role, get_user_info
 from src.core.db.base import get_async_session
 
 admin = APIRouter(
@@ -19,9 +19,10 @@ current_superuser = fastapi_users.current_user(active=True, superuser=True)
 async def get_staff_full_info(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)):
-    query = select(User.email, User.name, User.salary, User.id, User.role).where(User.role != "USER")
-    result = await session.execute(query)
-    return result.mappings().all()
+
+    info = await get_user_info(current_user, session)
+
+    return info
 
 
 @admin.put("/role")
