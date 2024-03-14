@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.model import User, UserRoleEnum
 from src.services.manager import fastapi_users
-from src.services.utils import get_user_id
+from src.api.user.logic import get_user_id, update_user_salary, update_user_role
 from src.core.db.base import get_async_session
 
 admin = APIRouter(
@@ -32,47 +32,19 @@ async def update_role(
         current_user: User = Depends(current_superuser)
 ):
 
-    user = await get_user_id(user_id, session)
+    updated_role = await update_user_role(user_id, new_role, session)
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    user.role = new_role
-    user.is_verified = True
-
-    if user.role == UserRoleEnum.USER:
-        user.salary = 0
-        user.is_verified = False
-
-    query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.id == user_id)
-    result = await session.execute(query)
-
-    await session.commit()
-
-    return result.mappings().first()
+    return updated_role
 
 
 @admin.put("/salary")
-async def update_staff_salary(
+async def update_salary(
         user_id: int,
         new_salary: int,
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)
 ):
 
-    user = await get_user_id(user_id, session)
+    updated_user = await update_user_salary(user_id, new_salary, session)
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    if user.role == UserRoleEnum.USER:
-        raise HTTPException(status_code=409, detail="User is not staff")
-
-    user.salary = new_salary
-
-    query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.id == user_id)
-    result = await session.execute(query)
-
-    await session.commit()
-
-    return result.mappings().all()
+    return updated_user

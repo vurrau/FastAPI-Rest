@@ -1,8 +1,8 @@
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Boolean, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from sqlalchemy.orm import Mapped, mapped_column
 from src.core.db.base import Base
+
 
 from enum import Enum
 from sqlalchemy.dialects.postgresql import ENUM as Pg_Enum
@@ -27,7 +27,6 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
-    requests = relationship("Request", back_populates="user")
 
 
 
