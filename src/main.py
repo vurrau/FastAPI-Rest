@@ -5,7 +5,7 @@ from src.services.manager import fastapi_users
 from src.core.db.config import auth_backend
 
 from src.api.routes.admin import admin
-from src.api.routes.staff import staff
+from src.api.admin.staff.staff import staff
 from src.api.user.routes import user
 
 app = FastAPI()
