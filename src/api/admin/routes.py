@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.model import User, UserRoleEnum
 from src.services.manager import fastapi_users
-from src.api.user.logic import get_user_id, update_user_salary, update_user_role, get_user_info
+from src.api.user.logic import update_employee_salary, update_user_role, get_employee_info
 from src.core.db.base import get_async_session
 
 admin = APIRouter(
@@ -15,12 +14,12 @@ admin = APIRouter(
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 
-@admin.get("/staff")
-async def get_staff_full_info(
+@admin.get("/employee")
+async def get_full_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_superuser)):
 
-    info = await get_user_info(current_user, session)
+    info = await get_employee_info(current_user, session)
 
     return info
 
@@ -46,6 +45,6 @@ async def update_salary(
         current_user: User = Depends(current_superuser)
 ):
 
-    updated_user = await update_user_salary(user_id, new_salary, session)
+    updated_user = await update_employee_salary(user_id, new_salary, session)
 
     return updated_user

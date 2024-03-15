@@ -4,8 +4,8 @@ from src.api.user.schemas import UserRead, UserCreate
 from src.services.manager import fastapi_users
 from src.core.db.config import auth_backend
 
-from src.api.routes.admin import admin
-from src.api.admin.staff.staff import staff
+from src.api.admin.routes import admin
+from src.api.admin.staff.routes import staff
 from src.api.user.routes import user
 
 app = FastAPI()

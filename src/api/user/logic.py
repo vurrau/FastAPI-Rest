@@ -22,7 +22,7 @@ async def get_user_email(email: str, session: AsyncSession = Depends(get_async_s
     return result.scalar_one_or_none()
 
 
-async def get_user_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
+async def get_employee_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
     if current_user and current_user.is_superuser:
 
         query = select(User.email, User.name, User.salary, User.id, User.role).where(User.role != "USER")
@@ -43,7 +43,7 @@ async def get_user_info(current_user: User = None, session: AsyncSession = Depen
         return result.mappings().all()
 
 
-async def update_user_salary(user_id: int, new_salary: int, session: AsyncSession):
+async def update_employee_salary(user_id: int, new_salary: int, session: AsyncSession):
 
     user = await get_user_id(user_id, session)
 
@@ -83,3 +83,18 @@ async def update_user_role(user_id: int, new_role: UserRoleEnum, session: AsyncS
     await session.commit()
 
     return result.mappings().first()
+
+
+async def get_user_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
+    if current_user and current_user.is_verified:
+
+        query = select(User.email, User.name,  User.id).where(User.role == "USER")
+        result = await session.execute(query)
+
+        return result.mappings().all()
+
+    else:
+        query = select(User.name).where(User.role == "USER")
+        result = await session.execute(query)
+
+        return result.mappings().all()
