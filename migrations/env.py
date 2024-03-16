@@ -6,6 +6,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+import alembic_postgresql_enum
 
 from src.core.config import DB_NAME, DB_PORT, DB_HOST, DB_PASS, DB_USER
 from src.api.user.model import *

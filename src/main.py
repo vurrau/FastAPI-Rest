@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from src.api.request.routes import request
 from src.api.user.schemas import UserRead, UserCreate
 from src.services.manager import fastapi_users
 from src.core.db.config import auth_backend
@@ -26,5 +27,7 @@ app.include_router(
 app.include_router(admin)
 app.include_router(staff)
 app.include_router(user)
+app.include_router(request)
+
 
 
