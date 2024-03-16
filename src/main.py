@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from src.api.admin.manager.routes import manager
 from src.api.request.routes import request
 from src.api.user.schemas import UserRead, UserCreate
 from src.services.manager import fastapi_users
@@ -24,10 +25,10 @@ app.include_router(
     tags=["auth"],
 )
 
-app.include_router(admin)
-app.include_router(staff)
-app.include_router(user)
-app.include_router(request)
+routers = [admin, staff, user, request, manager]
+
+for router in routers:
+    app.include_router(router)
 
 
 
