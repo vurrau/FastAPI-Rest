@@ -9,7 +9,8 @@ class Solution(Base):
     __tablename__ = "solution"
 
     id = Column(Integer, primary_key=True, index=True)
-    description = Column(String)
+    description = Column(String, nullable=False)
+    username = Column(String(length=30), nullable=False)
     response_at = Column(DateTime, default=datetime)
     request_id = Column(Integer, ForeignKey("request.id"))
 

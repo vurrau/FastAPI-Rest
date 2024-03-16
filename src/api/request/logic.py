@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import Depends
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -37,4 +38,7 @@ async def get_all_request(
 
     result = await session.execute(query)
 
-    return result.mappings().all()
+    return result.scalars().all()
+
+
+

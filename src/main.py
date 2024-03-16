@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from src.api.admin.manager.routes import manager
 from src.api.request.routes import request
+from src.api.solution.routes import solution
 from src.api.user.schemas import UserRead, UserCreate
 from src.services.manager import fastapi_users
 from src.core.db.config import auth_backend
@@ -25,7 +26,7 @@ app.include_router(
     tags=["auth"],
 )
 
-routers = [admin, staff, user, request, manager]
+routers = [admin, staff, user, request, solution, manager]
 
 for router in routers:
     app.include_router(router)

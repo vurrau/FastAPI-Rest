@@ -22,8 +22,8 @@ class Request(Base):
     __tablename__ = "request"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String)
+    title = Column(String(length=30), index=True, nullable=False)
+    description = Column(String, nullable=False)
 
     status = Column(St_Enum(StatusEnum, name='statusENUM'), nullable=False, default=StatusEnum.OPEN)
     assignee = Column(St_Enum(AssigneeEnum, name='assigneeENUM'), nullable=False, default=AssigneeEnum.STAFF)
