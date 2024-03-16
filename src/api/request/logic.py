@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.request.model import Request, StatusEnum
+from src.api.request.model import Request
 from src.api.request.schema import RequestCreate
 from src.api.user.model import User
 from src.core.db.base import get_async_session

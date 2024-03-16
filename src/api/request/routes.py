@@ -1,10 +1,7 @@
-from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.request.logic import create_new_request
-from src.api.request.model import Request
 from src.api.request.schema import RequestCreate
 from src.api.user.model import User
 from src.core.db.base import get_async_session

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.logic import get_employee_info, get_user_info
 from src.services.manager import fastapi_users
-from src.api.user.model import User, UserRoleEnum
+from src.api.user.model import User
 from src.core.db.base import get_async_session
 
 staff = APIRouter(
