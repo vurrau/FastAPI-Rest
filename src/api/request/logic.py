@@ -13,7 +13,6 @@ from src.core.db.base import get_async_session
 
 async def get_request_id(request_id: int,
                          session: AsyncSession):
-
     result = await session.execute(select(Request).filter(Request.id == request_id))
 
     return result.scalar_one_or_none()
@@ -40,7 +39,6 @@ async def create_new_request(current_user: User,
 async def get_all_request(
         current_user: User,
         session: AsyncSession):
-
     query = select(Request).filter(Request.assignee == current_user.role.name)
 
     result = await session.execute(query)

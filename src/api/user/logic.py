@@ -9,14 +9,12 @@ from src.core.db.base import get_async_session
 
 
 async def get_user_id(user_id: int, session: AsyncSession = Depends(get_async_session)):
-
     result = await session.execute(select(User).filter(User.id == user_id))
 
     return result.scalar_one_or_none()
 
 
 async def get_user_email(email: str, session: AsyncSession = Depends(get_async_session)):
-
     result = await session.execute(select(User).filter(User.email == email))
 
     return result.scalar_one_or_none()
@@ -44,7 +42,6 @@ async def get_employee_info(current_user: User = None, session: AsyncSession = D
 
 
 async def update_employee_salary(user_id: int, new_salary: int, session: AsyncSession):
-
     user = await get_user_id(user_id, session)
 
     if not user:
@@ -64,7 +61,6 @@ async def update_employee_salary(user_id: int, new_salary: int, session: AsyncSe
 
 
 async def update_user_role(user_id: int, new_role: UserRoleEnum, session: AsyncSession):
-
     user = await get_user_id(user_id, session)
 
     if not user:
