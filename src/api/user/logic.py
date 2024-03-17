@@ -48,7 +48,7 @@ async def update_employee_salary(user_id: int, new_salary: int, session: AsyncSe
         raise HTTPException(status_code=404, detail="User not found")
 
     if user.role == UserRoleEnum.USER:
-        raise HTTPException(status_code=409, detail="User is not an employee")
+        raise HTTPException(status_code=403, detail="User is not an employee")
 
     user.salary = new_salary
 
