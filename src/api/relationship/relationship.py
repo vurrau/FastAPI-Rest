@@ -1,9 +1,6 @@
 from sqlalchemy import Integer, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
-from src.api.user.model import User
-from src.api.request.model import Request
-from src.api.solution.model import Solution
 from src.core.db.base import Base
 
 

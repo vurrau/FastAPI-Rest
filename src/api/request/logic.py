@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import Depends, HTTPException
 
-from sqlalchemy import select, delete
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.request.model import Request, AssigneeEnum, StatusEnum
