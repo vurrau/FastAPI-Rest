@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.request.logic import get_request_id
-from src.api.request.model import Request, StatusEnum
+from src.api.request.model import StatusEnum
 from src.api.solution.model import Solution
 from src.api.user.model import User
 

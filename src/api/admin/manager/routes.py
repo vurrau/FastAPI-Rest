@@ -14,11 +14,4 @@ manager = APIRouter(
 current_manager = fastapi_users.current_user(active=True, verified=True)
 
 
-@manager.get("/request")
-async def get_request(
-        session: AsyncSession = Depends(get_async_session),
-        current_user: User = Depends(current_manager)):
 
-    requests = await get_all_request(current_user, session)
-
-    return requests
