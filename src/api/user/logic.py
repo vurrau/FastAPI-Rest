@@ -20,6 +20,14 @@ async def get_user_email(email: str, session: AsyncSession = Depends(get_async_s
     return result.scalar_one_or_none()
 
 
+async def get_email_employee(session: AsyncSession = Depends(get_async_session)):
+    roles = [UserRoleEnum.STAFF, UserRoleEnum.MANAGER]
+
+    result = await session.execute(select(User.email).filter(User.role.in_(roles)))
+
+    return result.scalars().all()
+
+
 async def get_employee_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
     if current_user and current_user.is_superuser:
 

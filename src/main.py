@@ -10,6 +10,7 @@ from src.core.db.config import auth_backend
 from src.api.admin.routes import admin
 from src.api.admin.staff.routes import staff
 from src.api.user.routes import user
+from redis import asyncio as aioredis
 
 app = FastAPI()
 
@@ -30,6 +31,11 @@ routers = [admin, staff, user, request, solution, manager]
 
 for router in routers:
     app.include_router(router)
+
+
+@app.on_event("startup")
+async def startup_event():
+    redis = aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
 
 
 
