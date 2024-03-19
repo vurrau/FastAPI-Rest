@@ -27,7 +27,7 @@ async def create_request(request_data: RequestCreate,
                          ):
     create = await create_new_request(current_user, request_data, session)
 
-    await send_create_request(background_tasks, session)
+    await send_create_request(background_tasks, session, request_data)
 
     return create
 
