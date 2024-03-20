@@ -53,3 +53,7 @@ fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
     [auth_backend],
 )
+
+current_admin = fastapi_users.current_user(active=True, superuser=True)
+current_employee = fastapi_users.current_user(active=True, verified=True)
+current_active_user = fastapi_users.current_user(active=True)

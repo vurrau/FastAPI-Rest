@@ -31,19 +31,19 @@ async def get_email_employee(session: AsyncSession = Depends(get_async_session))
 async def get_employee_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
     if current_user and current_user.is_superuser:
 
-        query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.role != "USER")
+        query = select(User.email, User.name, User.salary, User.id, User.role).filter(User.role != UserRoleEnum.USER)
         result = await session.execute(query)
 
         return result.mappings().all()
 
     elif current_user and current_user.is_verified:
-        query = select(User.email, User.name, User.id, User.role).filter(User.role != "USER")
+        query = select(User.email, User.name, User.id, User.role).filter(User.role != UserRoleEnum.USER)
         result = await session.execute(query)
 
         return result.mappings().all()
 
     else:
-        query = select(User.email, User.name).filter(User.role != "USER")
+        query = select(User.email, User.name).filter(User.role != UserRoleEnum.USER)
         result = await session.execute(query)
 
         return result.mappings().all()
@@ -92,13 +92,13 @@ async def update_user_role(user_id: int, new_role: UserRoleEnum, session: AsyncS
 async def get_user_info(current_user: User = None, session: AsyncSession = Depends(get_async_session)):
     if current_user and current_user.is_verified:
 
-        query = select(User.email, User.name, User.id).filter(User.role == "USER")
+        query = select(User.email, User.name, User.id).filter(User.role == UserRoleEnum.USER)
         result = await session.execute(query)
 
         return result.mappings().all()
 
     else:
-        query = select(User.name).filter(User.role == "USER")
+        query = select(User.name).filter(User.role == UserRoleEnum.USER)
         result = await session.execute(query)
 
         return result.mappings().all()

@@ -25,7 +25,8 @@ async def send_create_request(background_tasks, session, request_data):
     email_message_base = EmailMessage()
     email_message_base['Subject'] = 'New request'
     email_message_base['From'] = SMTP_USER
-    email_message_base.set_content(f'A new request has been created.\n\nTitle: {title}\nDescription: {description}', subtype='plain')
+    email_message_base.set_content(
+        f'A new request has been created.\n\nTitle: {title}\nDescription: {description}', subtype='plain')
 
     staff_and_managers = await get_email_employee(session)
 
