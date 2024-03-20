@@ -12,15 +12,14 @@ staff = APIRouter(
 )
 
 
-
 @staff.get("/")
 async def get_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_employee)
 ):
-    info = await get_employee_info(current_user, session)
+    result = await get_employee_info(current_user, session)
 
-    return info
+    return result
 
 
 @staff.get("/user")
@@ -28,6 +27,6 @@ async def get_info_user(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_employee)
 ):
-    info = await get_user_info(current_user, session)
+    result = await get_user_info(current_user, session)
 
-    return info
+    return result

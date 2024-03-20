@@ -11,7 +11,6 @@ manager = APIRouter(
     tags=["manager"]
 )
 
-current_manager = fastapi_users.current_user(active=True, verified=True)
 
 
 

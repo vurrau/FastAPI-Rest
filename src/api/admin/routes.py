@@ -17,9 +17,9 @@ async def get_full_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    info = await get_employee_info(current_user, session)
+    result = await get_employee_info(current_user, session)
 
-    return info
+    return result
 
 
 @admin.patch("/role")
@@ -29,9 +29,9 @@ async def update_role(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    updated_role = await update_user_role(user_id, new_role, session)
+    result = await update_user_role(user_id, new_role, session)
 
-    return updated_role
+    return result
 
 
 @admin.patch("/salary")
@@ -41,6 +41,6 @@ async def update_salary(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    updated_user = await update_employee_salary(user_id, new_salary, session)
+    result = await update_employee_salary(user_id, new_salary, session)
 
-    return updated_user
+    return result
