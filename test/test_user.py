@@ -1,8 +1,11 @@
 from httpx import AsyncClient
 
+from user_fixtures import create_admin
 
-async def test_get_staff_user(ac: AsyncClient, create_admin):
+
+async def test_get_name_employee(ac: AsyncClient, create_admin):
     response = await ac.get("/user/staff")
+
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
 
@@ -12,7 +15,7 @@ async def test_get_staff_user(ac: AsyncClient, create_admin):
 
     expected_data = {
         "name": create_admin.name,
-        "role": "ADMIN",
+        "email": create_admin.email,
     }
     assert expected_data in staff_members
 
