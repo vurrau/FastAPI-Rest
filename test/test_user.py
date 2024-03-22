@@ -1,21 +1,42 @@
 from httpx import AsyncClient
 
-from user_fixtures import create_admin
+from token_fixtures import auth_token_admin, auth_token_staff, auth_token_user, auth_token_manager
+from user_fixtures import create_user, create_staff, create_admin, create_manager
 
 
 async def test_get_name_employee(ac: AsyncClient, create_admin):
-    response = await ac.get("/user/staff")
+    response = await ac.get("/user/employee")
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
 
     staff_members = response.json()
 
+    admin = create_admin
+
     assert len(staff_members) > 0
 
     expected_data = {
-        "name": create_admin.name,
-        "email": create_admin.email,
+        "name": admin.name,
+        "email": admin.email,
+    }
+    assert expected_data in staff_members
+
+
+async def test_get_info_user(ac: AsyncClient, create_user):
+    response = await ac.get("/user")
+
+    assert response.status_code == 200
+    assert "application/json" in response.headers["content-type"]
+
+    staff_members = response.json()
+
+    user = create_user
+
+    assert len(staff_members) > 0
+
+    expected_data = {
+        "name": user.name
     }
     assert expected_data in staff_members
 

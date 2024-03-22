@@ -23,6 +23,22 @@ async def create_admin(session):
 
 
 @pytest.fixture
+async def create_manager(session):
+    async with session as async_session:
+        user = User(
+            email="liza@gmail.com",
+            hashed_password=context.hash("12345"),
+            name="Liza",
+            salary=4000,
+            role=UserRoleEnum.MANAGER,
+            is_verified=True
+        )
+        async_session.add(user)
+        await async_session.commit()
+        return user
+
+
+@pytest.fixture
 async def create_staff(session):
     async with session as async_session:
         user = User(

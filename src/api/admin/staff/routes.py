@@ -12,7 +12,7 @@ staff = APIRouter(
 )
 
 
-@staff.get("/")
+@staff.get("/employee")
 async def get_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_employee)
