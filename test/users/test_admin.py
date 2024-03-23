@@ -1,8 +1,8 @@
 from httpx import AsyncClient
 
 from src.api.user.model import UserRoleEnum
-from fixtures.token_fixtures import auth_token_admin, auth_token_staff, auth_token_user, auth_token_manager
-from test.users.fixtures.user_fixtures import create_user, create_staff, create_admin, create_manager
+from fixtures.token_fixtures import auth_token_admin
+from test.users.fixtures.user_fixtures import create_user, create_staff, create_admin
 
 
 async def test_get_full_info_employee(ac: AsyncClient, auth_token_admin, create_staff):

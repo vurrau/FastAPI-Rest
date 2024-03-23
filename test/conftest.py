@@ -8,6 +8,7 @@ from sqlalchemy import delete
 from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
+from src.api.request.model import Request
 from src.api.user.model import User
 from src.main import app
 
@@ -26,15 +27,6 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 app.dependency_overrides[get_async_session] = override_get_async_session
-
-
-@pytest.fixture(autouse=True, scope='session')
-async def prepare_database():
-    async with engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope='session')
@@ -59,11 +51,22 @@ async def session():
         await session.close()
 
 
+@pytest.fixture(autouse=True, scope='session')
+async def prepare_database():
+    async with engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    async with engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+
 @pytest.fixture(autouse=True)
 async def cleanup_all_data(session):
     yield
     async with session.begin():
+        await session.execute(delete(Request))
         await session.execute(delete(User))
+
 
 
 

@@ -1,6 +1,6 @@
 from httpx import AsyncClient
 
-from test.users.fixtures.user_fixtures import create_user, create_staff, create_admin, create_manager
+from test.users.fixtures.user_fixtures import create_user, create_admin
 
 
 async def test_get_name_employee(ac: AsyncClient, create_admin):

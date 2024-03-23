@@ -14,3 +14,5 @@ async def create_request(session, auth_token_user):
         async_session.add(request)
         await async_session.commit()
         return request
+
+
