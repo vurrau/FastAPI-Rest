@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.request.logic import create_new_request, redirection, get_all_request, delete_one_request
-from src.api.request.schema import RequestCreate
+from src.api.request.schema import RequestCreate, RequestRead
 from src.api.user.model import User
 
 from src.core.db.base import get_async_session
@@ -17,7 +17,7 @@ request = APIRouter(
 )
 
 
-@request.post("/create")
+@request.post("/create", response_model=RequestCreate)
 async def create_request(request_data: RequestCreate,
                          background_tasks: BackgroundTasks,
                          session: AsyncSession = Depends(get_async_session),
@@ -30,7 +30,7 @@ async def create_request(request_data: RequestCreate,
     return result
 
 
-@request.get("/")
+@request.get("/", response_model=list[RequestRead])
 async def get_request(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_employee)
@@ -40,7 +40,7 @@ async def get_request(
     return result
 
 
-@request.patch("/redirection")
+@request.patch("/redirection", response_model=RequestRead)
 async def redirection_request(request_id: int,
                               current_user: User = Depends(current_employee),
                               session: AsyncSession = Depends(get_async_session)
@@ -50,7 +50,7 @@ async def redirection_request(request_id: int,
     return result
 
 
-@request.delete("/")
+@request.delete("/delete")
 async def delete_request(request_id: int,
                          current_user: User = Depends(current_active_user),
                          session: AsyncSession = Depends(get_async_session)):

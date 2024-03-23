@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.model import User, UserRoleEnum
+from src.api.user.schemas import UserRead
 from src.services.manager import current_admin
 from src.api.user.logic import update_employee_salary, update_user_role, get_employee_info
 from src.core.db.base import get_async_session
@@ -12,7 +13,7 @@ admin = APIRouter(
 )
 
 
-@admin.get("/employee")
+@admin.get("/employee", response_model=list[UserRead])
 async def get_full_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)

@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.logic import get_user_info, get_employee_info
 from src.api.user.model import User
+from src.api.user.schemas import UserRead
 from src.core.db.base import get_async_session
 
 user = APIRouter(
@@ -12,14 +13,14 @@ user = APIRouter(
 )
 
 
-@user.get("/staff")
+@user.get("/staff", response_model=list[UserRead])
 async def get_name_employee(session: AsyncSession = Depends(get_async_session)):
     info = await get_employee_info(None, session)
 
     return info
 
 
-@user.get("/")
+@user.get("/", response_model=list[UserRead])
 async def get_info_user(session: AsyncSession = Depends(get_async_session)):
     info = await get_user_info(None, session)
 
