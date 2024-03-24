@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.user.model import User, UserRoleEnum
-from src.api.user.schemas import UserRead
+from src.api.admin.schemas import EmployeeInfo
 from src.services.manager import current_admin
-from src.api.user.logic import update_employee_salary, update_user_role, get_employee_info
+from src.api.user.logic import UserService
 from src.core.db.base import get_async_session
 
 admin = APIRouter(
@@ -12,13 +12,15 @@ admin = APIRouter(
     tags=["admin"]
 )
 
+user_service = UserService()
 
-@admin.get("/employee", response_model=list[UserRead])
+
+@admin.get("/employee", response_model=list[EmployeeInfo])
 async def get_full_info_employee(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    result = await get_employee_info(current_user, session)
+    result = await user_service.get_employee_info(session, current_user)
 
     return result
 
@@ -30,7 +32,7 @@ async def update_role(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    result = await update_user_role(user_id, new_role, session)
+    result = await user_service.update_user_role(user_id, session, new_role, session)
 
     return result
 
@@ -42,6 +44,6 @@ async def update_salary(
         session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    result = await update_employee_salary(user_id, new_salary, session)
+    result = await user_service.update_employee_salary(user_id, new_salary, session)
 
     return result

@@ -1,12 +1,16 @@
 from email.message import EmailMessage
 
 import aiosmtplib
+from fastapi import Depends
 
-from src.api.user.logic import get_email_employee
+from src.api.user.logic import UserService
 from src.core.config import SMTP_PASS, SMTP_USER
+from src.core.db.base import get_async_session
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 465
+
+user_service = UserService()
 
 
 async def send_email_async(email: EmailMessage):
@@ -28,7 +32,7 @@ async def send_create_request(background_tasks, session, request_data):
     email_message_base.set_content(
         f'A new request has been created.\n\nTitle: {title}\nDescription: {description}', subtype='plain')
 
-    staff_and_managers = await get_email_employee(session)
+    staff_and_managers = await user_service.get_email_employee()
 
     for user_email in staff_and_managers:
         email_message = EmailMessage()
