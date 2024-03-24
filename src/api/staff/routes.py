@@ -14,24 +14,16 @@ staff = APIRouter(
     tags=["staff"]
 )
 
-user_service = UserService()
-
 
 @staff.get("/employee", response_model=list[EmployeeInfo])
-async def get_info_employee(
-        session: AsyncSession = Depends(get_async_session),
-        current_user: User = Depends(current_employee)
-):
-    result = await user_service.get_employee_info(session, current_user)
+async def get_info_employee(current_user: User = Depends(current_employee)):
+    result = await UserService.get_employee_info()
 
     return result
 
 
 @staff.get("/user", response_model=list[UserInfo])
-async def get_info_user(
-        session: AsyncSession = Depends(get_async_session),
-        current_user: User = Depends(current_employee)
-):
-    result = await user_service.get_user_info(session, current_user)
+async def get_info_user(current_user: User = Depends(current_employee)):
+    result = await UserService.get_user_info()
 
     return result

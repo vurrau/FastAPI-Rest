@@ -12,38 +12,31 @@ admin = APIRouter(
     tags=["admin"]
 )
 
-user_service = UserService()
-
 
 @admin.get("/employee", response_model=list[EmployeeInfo])
-async def get_full_info_employee(
-        session: AsyncSession = Depends(get_async_session),
-        current_user: User = Depends(current_admin)
-):
-    result = await user_service.get_employee_info(session, current_user)
+async def get_full_info_employee(current_user: User = Depends(current_admin)):
+    result = await UserService.get_employee_info()
 
     return result
 
 
-@admin.patch("/role")
+@admin.patch("/role", response_model=EmployeeInfo)
 async def update_role(
         user_id: int,
         new_role: UserRoleEnum,
-        session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    result = await user_service.update_user_role(user_id, session, new_role, session)
+    result = await UserService.update_user_role(user_id, new_role)
 
     return result
 
 
-@admin.patch("/salary")
+@admin.patch("/salary", response_model=EmployeeInfo)
 async def update_salary(
         user_id: int,
         new_salary: int,
-        session: AsyncSession = Depends(get_async_session),
         current_user: User = Depends(current_admin)
 ):
-    result = await user_service.update_employee_salary(user_id, new_salary, session)
+    result = await UserService.update_employee_salary(user_id, new_salary)
 
     return result

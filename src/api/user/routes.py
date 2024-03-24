@@ -12,14 +12,14 @@ user = APIRouter(
 
 
 @user.get("/staff", response_model=list[EmployeeInfo])
-async def get_name_employee(session: AsyncSession = Depends(get_async_session)):
-    info = await UserService.get_employee_info(session)
+async def get_name_employee():
+    result = await UserService.get_employee_info()
 
-    return info
+    return result
 
 
 @user.get("/", response_model=list[UserInfo])
-async def get_info_user(session: AsyncSession = Depends(get_async_session)):
-    info = await UserService.get_user_info(session)
+async def get_info_user():
+    result = await UserService.get_user_info()
 
-    return info
+    return result
