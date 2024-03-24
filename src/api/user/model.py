@@ -10,9 +10,8 @@ from sqlalchemy.dialects.postgresql import ENUM as Pg_Enum
 
 class UserRoleEnum(Enum):
     USER = 'USER'
-    STAFF = 'STAFF'
+    EMPLOYEE = 'EMPLOYEE'
     MANAGER = "MANAGER"
-    ADMIN = 'ADMIN'
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):

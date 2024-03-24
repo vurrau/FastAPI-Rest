@@ -56,6 +56,7 @@ class UserService:
 
             user.salary = new_salary
 
+            session.add(user)
             await session.commit()
             return user
 
@@ -74,6 +75,7 @@ class UserService:
                 user.salary = 0
                 user.is_verified = False
 
+            session.add(user)
             await session.commit()
             return user
 
