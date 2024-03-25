@@ -18,9 +18,9 @@ async def send_email_async(email: EmailMessage):
     await smtp.quit()
 
 
-async def send_create_request(background_tasks, data):
-    title = data.title
-    description = data.description
+async def send_create_request(background_tasks, request_data):
+    title = request_data.title
+    description = request_data.description
 
     email_message_base = EmailMessage()
     email_message_base['Subject'] = 'New request'

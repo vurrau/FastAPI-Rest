@@ -2,13 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, BackgroundTasks
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.api.request.logic import RequestService
 from src.api.request.schema import RequestCreate, RequestInfo
 from src.api.user.model import User
 
-from src.core.db.base import get_async_session
 from src.services.manager import current_active_user, current_employee
 
 from src.tasks.tasks import send_create_request

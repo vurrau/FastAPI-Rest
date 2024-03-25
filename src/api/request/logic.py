@@ -18,11 +18,11 @@ class RequestService:
             return result.scalar_one_or_none()
 
     @staticmethod
-    async def create_new_request(current_user: User, data: RequestCreate):
+    async def create_new_request(current_user: User, request_data: RequestCreate):
         async with async_session_maker() as session:
             new_request = Request(
-                title=data.title,
-                description=data.description,
+                title=request_data.title,
+                description=request_data.description,
                 created_at=datetime.now(),
                 user_id=current_user.id
             )
