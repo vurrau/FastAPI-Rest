@@ -1,14 +1,15 @@
-from fastapi import FastAPI
+from typing import Annotated
 
-from src.api.admin.manager.routes import manager
+from fastapi import FastAPI, Depends
+
 from src.api.request.routes import request
 from src.api.solution.routes import solution
 from src.api.user.schemas import UserRead, UserCreate
 from src.services.manager import fastapi_users
 from src.core.db.config import auth_backend
 
-from src.api.admin.routes import admin
-from src.api.admin.staff.routes import staff
+from src.api.manager.routes import manager
+from src.api.employee.routes import employee
 from src.api.user.routes import user
 
 app = FastAPI()
@@ -21,15 +22,16 @@ app.include_router(
 )
 
 app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
+    fastapi_users.get_register_router(UserRead, Annotated[UserCreate, Depends()]),
     prefix="/auth",
     tags=["auth"],
 )
 
-routers = [admin, staff, user, request, solution, manager]
+routers = [manager, employee, user, request, solution]
 
 for router in routers:
     app.include_router(router)
+
 
 
 

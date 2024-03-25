@@ -2,7 +2,7 @@ from httpx import AsyncClient
 
 
 async def test_get_staff(ac: AsyncClient, auth_token_staff, create_staff):
-    response = await ac.get("/staff/", headers=auth_token_staff)
+    response = await ac.get("/employee/", headers=auth_token_staff)
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
@@ -19,7 +19,7 @@ async def test_get_staff(ac: AsyncClient, auth_token_staff, create_staff):
 
 
 async def test_get_user_name(ac: AsyncClient, create_user, auth_token_staff):
-    response = await ac.get("/staff/user", headers=auth_token_staff)
+    response = await ac.get("/employee/user", headers=auth_token_staff)
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]

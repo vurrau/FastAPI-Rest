@@ -1,58 +1,50 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Annotated
 
-from src.api.request.logic import create_new_request, redirection, get_all_request, delete_one_request
+from fastapi import APIRouter, Depends, BackgroundTasks
 
-from src.api.request.schema import RequestCreate
+from src.api.request.logic import RequestService
+from src.api.request.schema import RequestCreate, RequestInfo
 from src.api.user.model import User
-from src.core.db.base import get_async_session
-from src.services.manager import fastapi_users
+
+from src.services.manager import current_active_user, current_employee
+
+from src.tasks.tasks import send_create_request
 
 request = APIRouter(
     prefix="/request",
     tags=["request"]
 )
 
-current_active_user = fastapi_users.current_user(active=True)
-current_employee = fastapi_users.current_user(active=True, verified=True)
-current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
-
-@request.post("/create")
-async def create_request(request_data: RequestCreate,
-                         session: AsyncSession = Depends(get_async_session),
+@request.post("/create", response_model=RequestInfo)
+async def create_request(data: Annotated[RequestCreate, Depends()],
+                         background_tasks: BackgroundTasks,
                          current_user: User = Depends(current_active_user)
                          ):
-    create = await create_new_request(current_user, request_data, session)
+    result = await RequestService.create_new_request(current_user, data)
 
-    return create
+    # await send_create_request(background_tasks, data)
 
-
-@request.get("/")
-async def get_request(
-        session: AsyncSession = Depends(get_async_session),
-        current_user: User = Depends(current_employee)
-):
-    requests = await get_all_request(current_user, session)
-
-    return requests
+    return result
 
 
-@request.patch("/redirection")
-async def redirection_request(request_id: int,
-                              current_user: User = Depends(current_employee),
-                              session: AsyncSession = Depends(get_async_session)
-                              ):
-    modified_request = await redirection(request_id, current_user, session)
+@request.get("/", response_model=list[RequestInfo])
+async def get_request(current_user: User = Depends(current_employee)):
+    result = await RequestService.get_all_request(current_user)
 
-    return modified_request
+    return result
 
 
-@request.delete("/")
-async def delete_request(request_id: int,
-                         current_user: User = Depends(current_active_user),
-                         session: AsyncSession = Depends(get_async_session)):
-    result = await delete_one_request(request_id, current_user, session)
+@request.patch("/redirection", response_model=RequestInfo)
+async def redirection_request(request_id: int, current_user: User = Depends(current_employee)):
+    result = await RequestService.redirection(request_id, current_user)
+
+    return result
+
+
+@request.delete("/delete")
+async def delete_request(request_id: int, current_user: User = Depends(current_active_user)):
+    result = await RequestService.delete_one_request(request_id, current_user)
 
     return result
 

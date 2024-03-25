@@ -2,7 +2,7 @@ from httpx import AsyncClient
 
 
 async def test_get_staff_admin(ac: AsyncClient, auth_token_admin, create_staff):
-    response = await ac.get("/admin/staff", headers=auth_token_admin)
+    response = await ac.get("/manager/employee", headers=auth_token_admin)
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
@@ -22,7 +22,7 @@ async def test_get_staff_admin(ac: AsyncClient, auth_token_admin, create_staff):
 
 
 async def test_update_role(ac: AsyncClient, auth_token_admin, create_user):
-    response = await ac.put("/admin/role",
+    response = await ac.put("/manager/role",
                             headers=auth_token_admin,
                             params={"user_id": create_user.id, "new_role": "STAFF"}
                             )
@@ -41,7 +41,7 @@ async def test_update_role(ac: AsyncClient, auth_token_admin, create_user):
 
 
 async def test_update_staff_salary(ac: AsyncClient, auth_token_admin, create_staff):
-    response = await ac.put("/admin/salary",
+    response = await ac.put("/manager/salary",
                             headers=auth_token_admin,
                             params={"user_id": create_staff.id, "new_salary": 2222}
                             )

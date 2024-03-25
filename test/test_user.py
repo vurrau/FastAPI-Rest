@@ -2,7 +2,7 @@ from httpx import AsyncClient
 
 
 async def test_get_staff_user(ac: AsyncClient, create_admin):
-    response = await ac.get("/user/staff")
+    response = await ac.get("/user/employee")
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
 
