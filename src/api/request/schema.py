@@ -10,7 +10,7 @@ class RequestCreate(BaseModel):
     description: str
 
 
-class RequestRead(BaseModel):
+class RequestInfo(BaseModel):
     id: int
     title: str
     description: str

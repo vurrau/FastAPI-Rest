@@ -25,7 +25,7 @@ class UserService:
     @staticmethod
     async def get_email_employee():
         async with async_session_maker() as session:
-            roles = [UserRoleEnum.STAFF, UserRoleEnum.MANAGER]
+            roles = [UserRoleEnum.EMPLOYEE, UserRoleEnum.MANAGER]
 
             result = await session.execute(select(User.email).filter(User.role.in_(roles)))
             return result.scalars().all()
