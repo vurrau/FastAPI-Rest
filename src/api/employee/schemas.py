@@ -3,14 +3,21 @@ from pydantic import BaseModel
 from src.api.user.model import UserRoleEnum
 
 
-class UserInfo(BaseModel):
-    id: int
-    name: str
-    email: str
-
-
 class EmployeeInfo(BaseModel):
+    name: str
+    email: str
+
+
+class EmployeeInfoBasic(BaseModel):
     id: int
     name: str
     email: str
-    # role: UserRoleEnum
+    role: UserRoleEnum
+
+
+class EmployeeInfoFull(BaseModel):
+    id: int
+    name: str
+    email: str
+    role: UserRoleEnum
+    salary: int

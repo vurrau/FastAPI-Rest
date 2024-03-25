@@ -40,7 +40,7 @@ class SolutionService:
                 await session.commit()
                 await session.refresh(new_solution)
 
-                return request, new_solution
+                return new_solution
 
             else:
                 raise HTTPException(status_code=404, detail="Request not found")
