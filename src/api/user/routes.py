@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.user.logic import get_user_info, get_employee_info
+from src.api.user.logic import UserService
 from src.api.user.model import User
-from src.core.db.base import get_async_session
+from src.api.user.schemas import UserInfo, UserInfoBasic
+from src.services.manager import current_employee
 
 user = APIRouter(
     prefix="/user",
@@ -12,15 +11,17 @@ user = APIRouter(
 )
 
 
-@user.get("/employee")
-async def get_name_employee(session: AsyncSession = Depends(get_async_session)):
-    info = await get_employee_info(None, session)
+@user.get("/info", response_model=list[UserInfo])
+async def get_info_user():
+    result = await UserService.get_user_info()
 
-    return info
+    return result
 
 
-@user.get("/")
-async def get_info_user(session: AsyncSession = Depends(get_async_session)):
-    info = await get_user_info(None, session)
+@user.get("/info/basic", response_model=list[UserInfoBasic])
+async def get_info_user_for_employee(current_user: User = Depends(current_employee)):
+    result = await UserService.get_user_info()
 
-    return info
+    return result
+
+

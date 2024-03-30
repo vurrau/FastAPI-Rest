@@ -14,7 +14,7 @@ class StatusEnum(Enum):
 
 
 class AssigneeEnum(Enum):
-    STAFF = 'STAFF'
+    EMPLOYEE = 'EMPLOYEE'
     MANAGER = 'MANAGER'
 
 
@@ -26,7 +26,7 @@ class Request(Base):
     description = Column(String, nullable=False)
 
     status = Column(St_Enum(StatusEnum, name='statusENUM'), nullable=False, default=StatusEnum.OPEN)
-    assignee = Column(St_Enum(AssigneeEnum, name='assigneeENUM'), nullable=False, default=AssigneeEnum.STAFF)
+    assignee = Column(St_Enum(AssigneeEnum, name='assigneeENUM'), nullable=False, default=AssigneeEnum.EMPLOYEE)
 
     created_at = Column(DateTime, default=datetime)
     user_id = Column(Integer, ForeignKey("user.id"))

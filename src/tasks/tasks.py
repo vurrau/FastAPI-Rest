@@ -2,7 +2,7 @@ from email.message import EmailMessage
 
 import aiosmtplib
 
-from src.api.user.logic import get_email_employee
+from src.api.user.logic import UserService
 from src.core.config import SMTP_PASS, SMTP_USER
 
 SMTP_HOST = "smtp.gmail.com"
@@ -18,7 +18,7 @@ async def send_email_async(email: EmailMessage):
     await smtp.quit()
 
 
-async def send_create_request(background_tasks, session, request_data):
+async def send_create_request(background_tasks, request_data):
     title = request_data.title
     description = request_data.description
 
@@ -28,7 +28,7 @@ async def send_create_request(background_tasks, session, request_data):
     email_message_base.set_content(
         f'A new request has been created.\n\nTitle: {title}\nDescription: {description}', subtype='plain')
 
-    staff_and_managers = await get_email_employee(session)
+    staff_and_managers = await UserService.get_email_employee()
 
     for user_email in staff_and_managers:
         email_message = EmailMessage()
@@ -39,5 +39,5 @@ async def send_create_request(background_tasks, session, request_data):
 
         background_tasks.add_task(send_email_async, email_message)
 
-    return {"message": "Request created and notifications sent to staff and managers."}
+    return {"message": "Request created and notifications sent to employee and managers."}
 
