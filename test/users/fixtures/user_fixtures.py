@@ -7,22 +7,6 @@ context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 @pytest.fixture
-async def create_admin(session):
-    async with session as async_session:
-        user = User(
-            email="pavel@gmail.com",
-            hashed_password=context.hash("12345"),
-            name="Pavel",
-            role=UserRoleEnum.ADMIN,
-            is_verified=True,
-            is_superuser=True
-        )
-        async_session.add(user)
-        await async_session.commit()
-        return user
-
-
-@pytest.fixture
 async def create_manager(session):
     async with session as async_session:
         user = User(
@@ -31,7 +15,9 @@ async def create_manager(session):
             name="Liza",
             salary=4000,
             role=UserRoleEnum.MANAGER,
-            is_verified=True
+            is_verified=True,
+            is_superuser=True
+
         )
         async_session.add(user)
         await async_session.commit()
@@ -39,14 +25,14 @@ async def create_manager(session):
 
 
 @pytest.fixture
-async def create_staff(session):
+async def create_employee(session):
     async with session as async_session:
         user = User(
             email="alex@gmail.com",
             hashed_password=context.hash("12345"),
             name="Alex",
             salary=2500,
-            role=UserRoleEnum.STAFF,
+            role=UserRoleEnum.EMPLOYEE,
             is_verified=True
         )
         async_session.add(user)

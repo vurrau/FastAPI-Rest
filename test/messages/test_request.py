@@ -17,7 +17,7 @@ async def test_create_request(ac: AsyncClient, auth_token_user, create_user):
 
     assert request_data["title"] == "test"
     assert request_data["description"] == "create request test"
-    assert request_data["assignee"] == AssigneeEnum.STAFF.value
+    assert request_data["assignee"] == AssigneeEnum.EMPLOYEE.value
     assert request_data["status"] == StatusEnum.OPEN.value
     assert request_data["user_id"] == create_user.id
 
