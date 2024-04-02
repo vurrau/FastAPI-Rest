@@ -8,7 +8,7 @@ from test.users.fixtures.token_fixtures import auth_token_employee, auth_token_u
 async def test_update_role(ac: AsyncClient, auth_token_manager, create_user):
     response = await ac.patch("/manager/role",
                             headers=auth_token_manager,
-                            params={"user_id": create_user.id, "new_role": "STAFF"}
+                            params={"user_id": create_user.id, "new_role": "EMPLOYEE"}
                             )
 
     assert response.status_code == 200

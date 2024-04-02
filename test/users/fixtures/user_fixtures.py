@@ -16,8 +16,7 @@ async def create_manager(session):
             salary=4000,
             role=UserRoleEnum.MANAGER,
             is_verified=True,
-            is_superuser=True
-
+            is_superuser=True,
         )
         async_session.add(user)
         await async_session.commit()

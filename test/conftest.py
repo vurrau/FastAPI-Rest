@@ -2,6 +2,7 @@ import asyncio
 import pytest
 from typing import AsyncGenerator
 
+from fastapi import Depends
 from httpx import AsyncClient, ASGITransport
 
 from sqlalchemy import delete
@@ -66,7 +67,6 @@ async def cleanup_all_data(session):
     async with session.begin():
         await session.execute(delete(Request))
         await session.execute(delete(User))
-
 
 
 
