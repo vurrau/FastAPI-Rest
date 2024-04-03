@@ -24,7 +24,7 @@ async def create_solution(request_id: int,
     return result
 
 
-@solution.delete("/")
+@solution.delete("/delete")
 async def delete_solution(solution_id: int,
                           current_user: User = Depends(current_manager),
                           session: AsyncSession = Depends(get_async_session)):

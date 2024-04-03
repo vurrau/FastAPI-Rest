@@ -30,7 +30,7 @@ async def create_request(data: Annotated[RequestCreate, Depends()],
     return result
 
 
-@request.get("/", response_model=list[RequestInfo])
+@request.get("/info", response_model=list[RequestInfo])
 async def get_request(current_user: User = Depends(current_employee),
                       session: AsyncSession = Depends(get_async_session)):
     result = await RequestService.get_all_request(current_user, session)

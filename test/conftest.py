@@ -10,6 +10,7 @@ from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from src.api.request.model import Request
+from src.api.solution.model import Solution
 from src.api.user.model import User
 from src.main import app
 
@@ -65,6 +66,7 @@ async def prepare_database():
 async def cleanup_all_data(session):
     yield
     async with session.begin():
+        await session.execute(delete(Solution))
         await session.execute(delete(Request))
         await session.execute(delete(User))
 

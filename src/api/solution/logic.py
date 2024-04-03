@@ -22,7 +22,7 @@ class SolutionService:
                                   solution_data: str,
                                   current_user: User,
                                   session: AsyncSession):
-        request = await RequestService.get_request_id(request_id)
+        request = await RequestService.get_request_id(request_id, session)
 
         if request:
             new_solution = Solution(

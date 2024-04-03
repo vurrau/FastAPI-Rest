@@ -5,12 +5,11 @@ from test.users.fixtures.token_fixtures import auth_token_employee, auth_token_u
 
 
 async def test_full_info_employee(ac: AsyncClient, auth_token_manager, create_employee):
+    employee = create_employee
     response = await ac.get("/employee/info/full", headers=auth_token_manager)
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
-
-    employee = create_employee
 
     employee_members = response.json()
 
@@ -27,12 +26,11 @@ async def test_full_info_employee(ac: AsyncClient, auth_token_manager, create_em
 
 
 async def test_basic_info_employee(ac: AsyncClient, auth_token_employee, create_employee):
+    employee = create_employee
     response = await ac.get("/employee/info/basic", headers=auth_token_employee)
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
-
-    employee = create_employee
 
     employee_members = response.json()
 
@@ -48,14 +46,13 @@ async def test_basic_info_employee(ac: AsyncClient, auth_token_employee, create_
 
 
 async def test_info_employee(ac: AsyncClient, create_manager):
+    manager = create_manager
     response = await ac.get("/employee/info")
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
 
     staff_members = response.json()
-
-    manager = create_manager
 
     assert len(staff_members) > 0
 

@@ -6,15 +6,14 @@ from test.users.fixtures.token_fixtures import auth_token_employee, auth_token_u
 
 
 async def test_update_role(ac: AsyncClient, auth_token_manager, create_user):
+    user = create_user
     response = await ac.patch("/manager/role",
                             headers=auth_token_manager,
-                            params={"user_id": create_user.id, "new_role": "EMPLOYEE"}
+                            params={"user_id": user.id, "new_role": "EMPLOYEE"}
                             )
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
-
-    user = create_user
 
     user_data = response.json()
 
@@ -25,15 +24,14 @@ async def test_update_role(ac: AsyncClient, auth_token_manager, create_user):
 
 
 async def test_update_salary(ac: AsyncClient, auth_token_manager, create_employee):
+    employee = create_employee
     response = await ac.patch("/manager/salary",
                             headers=auth_token_manager,
-                            params={"user_id": create_employee.id, "new_salary": 2222}
+                            params={"user_id": employee.id, "new_salary": 2222}
                             )
 
     assert response.status_code == 200
     assert "application/json" in response.headers["content-type"]
-
-    employee = create_employee
 
     employee_members = response.json()
 
