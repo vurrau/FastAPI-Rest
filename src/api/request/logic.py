@@ -34,6 +34,9 @@ class RequestService:
 
     @staticmethod
     async def get_all_request(current_user: User, session: AsyncSession):
+        """
+        Depending on the role, we get a list of queries.
+        """
         query = select(Request).filter(Request.assignee == current_user.role.name)
 
         result = await session.execute(query)
@@ -41,6 +44,12 @@ class RequestService:
 
     @staticmethod
     async def redirection(request_id: int, current_user: User, session: AsyncSession):
+        """
+        If an employee cannot provide a solution to a request,
+        he can forward it to the manager.
+
+        There is no way to redirect it again.
+        """
         request = await RequestService.get_request_id(request_id, session)
 
         if current_user.role.value == AssigneeEnum.EMPLOYEE.value:
@@ -56,6 +65,12 @@ class RequestService:
 
     @staticmethod
     async def delete_one_request(request_id: int, current_user: User, session: AsyncSession):
+        """
+        a user can only delete his request,
+        until it is resolved.
+
+        In the same way, the manager can also delete.
+        """
         request = await RequestService.get_request_id(request_id, session)
 
         if not request:

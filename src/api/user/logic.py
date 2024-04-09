@@ -36,6 +36,10 @@ class UserService:
 
     @staticmethod
     async def update_employee_salary(user_id: int, new_salary: int, session: AsyncSession):
+        """
+        A function where the manager can change the salary of employees.
+        It is not possible to assign a salary to a user.
+        """
         user = await UserService.get_user_id(user_id, session)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
@@ -50,6 +54,10 @@ class UserService:
 
     @staticmethod
     async def update_user_role(user_id: int, new_role: UserRoleEnum, session: AsyncSession):
+        """
+        Function to change the user's role.
+        The manager can assign the role.
+        """
         user = await UserService.get_user_id(user_id, session)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")

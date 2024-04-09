@@ -26,6 +26,7 @@ async def create_request(data: Annotated[RequestCreate, Depends()],
     result = await RequestService.create_new_request(current_user, data, session)
 
     await send_create_request(background_tasks, data, session)
+    # sends a message to the email of all employees and managers with the created request
 
     return result
 
@@ -54,5 +55,3 @@ async def delete_request(request_id: int,
     result = await RequestService.delete_one_request(request_id, current_user, session)
 
     return result
-
-
