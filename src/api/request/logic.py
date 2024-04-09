@@ -47,8 +47,6 @@ class RequestService:
         """
         If an employee cannot provide a solution to a request,
         he can forward it to the manager.
-
-        There is no way to redirect it again.
         """
         request = await RequestService.get_request_id(request_id, session)
 
