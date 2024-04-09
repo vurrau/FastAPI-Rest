@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from fastapi_cache.decorator import cache
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,6 +19,7 @@ class UserService:
         return result.scalar_one_or_none()
 
     @staticmethod
+    @cache(expire=43200)
     async def get_email_employee(session: AsyncSession):
         roles = [UserRoleEnum.EMPLOYEE, UserRoleEnum.MANAGER]
 
